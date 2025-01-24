@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UserType } from '../../../common/enums/user.enums';
 import { throwError } from '../../../common/errors/errors.function';
 import { CreateUserDto } from '../../auth/dtos/create-user.dto';
+import { LoginUserDto } from '../../auth/dtos/login-user.dto';
 import { User } from '../entities/user.entity';
 
 @Injectable()
@@ -40,5 +41,36 @@ export class UserService {
       ...createUserDto,
       role: UserType.USER,
     });
+  }
+
+  // login a user
+  async loginUser(loginUserDto: LoginUserDto) {
+    const { usernameOrEmail, password } = loginUserDto;
+    // check User exits or not
+    const userExits = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :userName', {
+        userName: usernameOrEmail,
+      })
+      .orWhere('user.userName = :userName', {
+        userName: usernameOrEmail,
+      })
+      .getOne();
+
+    if (!userExits) {
+      throwError(HttpStatus.NOT_FOUND, [], 'User Not Found');
+    }
+
+    // compare passwords
+    const areEqual: boolean = await bcrypt.compare(
+      password,
+      userExits.password,
+    );
+
+    // if not equal throw error
+    if (!areEqual) {
+      throwError(HttpStatus.UNAUTHORIZED, [], 'Password dosent match');
+    }
+    return userExits;
   }
 }

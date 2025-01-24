@@ -4,5 +4,5 @@ export interface IUser {
   userName: string;
   email: string;
   role: UserType;
-  name: string;
+  name?: string;
 }
