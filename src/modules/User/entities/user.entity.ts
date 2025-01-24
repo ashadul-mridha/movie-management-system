@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { UserType } from '../../../common/enums/user.enums';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -15,8 +16,8 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column({ default: 'user' })
-  role: 'user' | 'admin';
+  @Column({ default: UserType.USER })
+  role: UserType;
 
   //   @OneToMany(() => Movie, (movie) => movie.createdBy)
   //   movies: Movie[];
