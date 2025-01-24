@@ -9,7 +9,7 @@ import { LoginUserDto } from '../../auth/dtos/login-user.dto';
 import { User } from '../entities/user.entity';
 
 @Injectable()
-export class UserService {
+export class AdminService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -19,7 +19,7 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto) {
     // check userName already exists
     const checkUserName = await this.userRepository.findOne({
-      where: { userName: createUserDto.userName, role: UserType.USER },
+      where: { userName: createUserDto.userName, role: UserType.ADMIN },
     });
     if (checkUserName) {
       throwError(400, ['userName'], 'User name already exists');
@@ -27,7 +27,7 @@ export class UserService {
 
     // check email already exists
     const checkEmail = await this.userRepository.findOne({
-      where: { email: createUserDto.email, role: UserType.USER },
+      where: { email: createUserDto.email, role: UserType.ADMIN },
     });
     if (checkEmail) {
       throwError(400, ['email'], 'Email already exists');
@@ -39,7 +39,7 @@ export class UserService {
     // create user
     return await this.userRepository.save({
       ...createUserDto,
-      role: UserType.USER,
+      role: UserType.ADMIN,
     });
   }
 
@@ -51,11 +51,13 @@ export class UserService {
     // check User exits or not
     const userExits = await this.userRepository
       .createQueryBuilder('user')
-      .where(whereCondition, { role: UserType.USER, userName: usernameOrEmail })
+      .where(whereCondition, {
+        role: UserType.ADMIN,
+        userName: usernameOrEmail,
+      })
       .getOne();
-
     if (!userExits) {
-      throwError(HttpStatus.NOT_FOUND, [], 'User Not Found');
+      throwError(HttpStatus.NOT_FOUND, [], 'admin Not Found');
     }
 
     // compare passwords

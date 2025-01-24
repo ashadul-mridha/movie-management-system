@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { throwError } from '../../../common/errors/errors.function';
+import { AdminService } from '../../User/services/admin.service';
 import { UserService } from '../../User/services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/login-user.dto';
@@ -10,6 +11,7 @@ import { IUser } from '../types/user.interface';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
     private jwtService: JwtService,
   ) {}
 
@@ -23,6 +25,25 @@ export class AuthService {
   // login a user
   async loginUser(loginUserDto: LoginUserDto) {
     const checkUser = await this.userService.loginUser(loginUserDto);
+
+    // if user find return user with access token
+    if (!checkUser) {
+      throwError(HttpStatus.NOT_FOUND, [], 'User Not Found');
+    }
+
+    return this.loginWithToken(checkUser);
+  }
+
+  // register an admin user
+  async registerAdmin(createUserDto: CreateUserDto) {
+    const createUser = await this.adminService.createUser(createUserDto);
+
+    return this.loginWithToken(createUser);
+  }
+
+  // login a admin user
+  async loginAdmin(loginUserDto: LoginUserDto) {
+    const checkUser = await this.adminService.loginUser(loginUserDto);
 
     // if user find return user with access token
     if (!checkUser) {
