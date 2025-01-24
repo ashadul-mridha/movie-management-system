@@ -56,6 +56,7 @@ export class AuthService {
   // send user info with token
   loginWithToken(user: IUser) {
     const userLoginInfo = {
+      id: user.id,
       userName: user.userName,
       email: user.email,
       name: user.name,
@@ -65,5 +66,24 @@ export class AuthService {
       ...userLoginInfo,
       access_token: this.jwtService.sign(userLoginInfo),
     };
+  }
+
+  // validate user token
+  async validateUser(payload: any) {
+    try {
+      // find user by id
+      const user = await this.userService.findUserById(payload.id);
+      if (user) {
+        return {
+          userId: payload.id,
+          username: payload.userName,
+          email: payload.email,
+          name: payload.name,
+          role: payload.role,
+        };
+      }
+    } catch (error) {
+      throwError(HttpStatus.UNAUTHORIZED, [], 'Invalid JWT token');
+    }
   }
 }

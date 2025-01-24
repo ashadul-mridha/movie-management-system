@@ -70,4 +70,9 @@ export class UserService {
     }
     return userExits;
   }
+
+  // find user by id
+  async findUserById(id: number) {
+    return await this.userRepository.findOne({ where: { id } });
+  }
 }

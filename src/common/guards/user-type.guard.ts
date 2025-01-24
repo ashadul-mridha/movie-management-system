@@ -25,6 +25,6 @@ export class UserTypeGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    return this.matchRoles(types, user.type);
+    return this.matchRoles(types, user.role);
   }
 }
