@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { Rating } from '../../Rating/entities/rating.entity';
 
 @Entity('movies')
 export class Movie extends BaseEntity {
@@ -36,6 +37,6 @@ export class Movie extends BaseEntity {
   // @ManyToOne(() => User, (user) => user.movies, { onDelete: 'CASCADE' })
   // createdBy: User;
 
-  // @OneToMany(() => Rating, (rating) => rating.movie)
-  // ratings: Rating[];
+  @OneToMany(() => Rating, (rating) => rating.movie)
+  ratings: Rating[];
 }
