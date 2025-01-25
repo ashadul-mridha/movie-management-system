@@ -1,6 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { ReportType } from '../../../common/enums/report.enum';
+import { Movie } from '../../Movie/entities/movie.entity';
 
 @Entity('reports')
 export class Report extends BaseEntity {
@@ -26,6 +33,7 @@ export class Report extends BaseEntity {
   // @ManyToOne(() => User, (user) => user.reports, { onDelete: 'CASCADE' })
   // user: User;
 
-  // @ManyToOne(() => Movie, (movie) => movie.reports, { onDelete: 'CASCADE' })
-  // movie: Movie;
+  @ManyToOne(() => Movie, (movie) => movie.reports)
+  @JoinColumn({ name: 'movieId' })
+  movie: Movie;
 }

@@ -18,10 +18,6 @@ export class ReportService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  select = {
-    id: true,
-  };
-
   // create a new report
   async create(userInfo: UserRequest, createReportDto: CreateReportDto) {
     // check the movie is exits or not
@@ -88,6 +84,7 @@ export class ReportService {
     // get all report
     const [reports, total] = await this.reportRepository
       .createQueryBuilder('report')
+      .leftJoinAndSelect('report.movie', 'movie')
       .where(whereCondition)
       .take(perPage)
       .skip(currentPage * perPage)

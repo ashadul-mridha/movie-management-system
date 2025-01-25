@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { UserType } from '../../../common/enums/user.enums';
+import { Movie } from '../../Movie/entities/movie.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -22,8 +23,8 @@ export class User extends BaseEntity {
   @Column({ default: UserType.USER })
   role: UserType;
 
-  //   @OneToMany(() => Movie, (movie) => movie.createdBy)
-  //   movies: Movie[];
+  @OneToMany(() => Movie, (movie) => movie.user)
+  movies: Movie[];
 
   //   @OneToMany(() => Rating, (rating) => rating.user)
   //   ratings: Rating[];

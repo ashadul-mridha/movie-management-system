@@ -3,10 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Rating } from '../../Rating/entities/rating.entity';
+import { Report } from '../../Report/entities/report.entity';
+import { User } from '../../User/entities/user.entity';
 
 @Entity('movies')
 export class Movie {
@@ -49,9 +53,13 @@ export class Movie {
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
 
-  // @ManyToOne(() => User, (user) => user.movies, { onDelete: 'CASCADE' })
-  // createdBy: User;
+  @ManyToOne(() => User, (user) => user.movies)
+  @JoinColumn({ name: 'createdBy' })
+  user: User;
 
   @OneToMany(() => Rating, (rating) => rating.movie)
   ratings: Rating[];
+
+  @OneToMany(() => Report, (report) => report.movie)
+  reports: Rating[];
 }

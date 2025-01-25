@@ -27,6 +27,14 @@ export class MovieService {
     createdBy: true,
     createdAt: true,
     updatedAt: true,
+    user: {
+      id: true,
+      name: true,
+      email: true,
+      userName: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   };
 
   // create a new movie
@@ -83,8 +91,9 @@ export class MovieService {
   ) {
     // get all movies
     const [movies, total] = await this.movieRepository.findAndCount({
-      where: { createdBy: userInfo.userId },
       select: this.select,
+      relations: ['user'],
+      order: { createdAt: 'DESC' },
       take: perPage,
       skip: currentPage * perPage,
     });
@@ -107,7 +116,6 @@ export class MovieService {
   async myMovies(userInfo: UserRequest) {
     const myMovies = await this.movieRepository.find({
       where: { createdBy: userInfo.userId },
-      select: this.select,
     });
 
     // if no movie found
@@ -126,6 +134,7 @@ export class MovieService {
   async getMovieById(userInfo: UserRequest, id: number) {
     const movie = await this.movieRepository.findOne({
       where: { id: id },
+      relations: ['user'],
       select: this.select,
     });
 
