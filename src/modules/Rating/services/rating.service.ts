@@ -65,10 +65,15 @@ export class RatingService {
     );
 
     // update movie average rating and total rating
-    await this.movieRepository.update(createRatingDto.movieId, {
-      avgRating: avgRating,
-      totalRatings: movie.totalRatings + 1,
-    });
+    await this.movieRepository
+      .createQueryBuilder('movie')
+      .update()
+      .set({
+        avgRating: +avgRating,
+        totalRatings: movie.totalRatings + 1,
+      })
+      .where('id = :id', { id: createRatingDto.movieId })
+      .execute();
 
     return await this.ratingRepository.findOne({ where: { id: rating.id } });
   }
@@ -115,9 +120,14 @@ export class RatingService {
     const avgRating = await this.calculateAverageRating(rating.movieId);
 
     // update movie average rating and total rating
-    await this.movieRepository.update(rating.movieId, {
-      avgRating: avgRating,
-    });
+    await this.movieRepository
+      .createQueryBuilder('movie')
+      .update()
+      .set({
+        avgRating: +avgRating,
+      })
+      .where('id = :id', { id: rating.movieId })
+      .execute();
 
     return await this.ratingRepository.findOne({ where: { id: id } });
   }
@@ -131,6 +141,8 @@ export class RatingService {
     // get all ratings
     const [ratings, total] = await this.ratingRepository.findAndCount({
       select: this.select,
+      relations: ['movie'],
+      order: { id: 'DESC' },
       take: perPage,
       skip: currentPage * perPage,
     });
@@ -167,6 +179,7 @@ export class RatingService {
       (acc, rating) => acc + rating.ratingValue,
       0,
     );
-    return totalRating / ratings.length;
+    const avgRating = (totalRating / ratings.length).toFixed(2);
+    return avgRating;
   }
 }

@@ -1,9 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity } from '../../../common/entities/base.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Rating } from '../../Rating/entities/rating.entity';
 
 @Entity('movies')
-export class Movie extends BaseEntity {
+export class Movie {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,6 +39,15 @@ export class Movie extends BaseEntity {
 
   @Column({ type: 'int', nullable: false })
   createdBy: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 
   // @ManyToOne(() => User, (user) => user.movies, { onDelete: 'CASCADE' })
   // createdBy: User;

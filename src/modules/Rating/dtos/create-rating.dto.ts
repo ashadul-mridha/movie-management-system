@@ -8,8 +8,8 @@ export class CreateRatingDto {
   })
   @IsNotEmpty()
   @IsInt()
-  @Min(1)
-  @Max(5)
+  @Min(1, { message: 'Rating should be greater than 1' })
+  @Max(5, { message: 'Rating should be less than 5' })
   ratingValue: number;
 
   @ApiProperty({

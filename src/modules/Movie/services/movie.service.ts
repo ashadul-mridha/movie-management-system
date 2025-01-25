@@ -34,6 +34,7 @@ export class MovieService {
     return await this.movieRepository.save({
       ...createMovieDto,
       createdBy: userInfo.userId,
+      updatedAt: new Date(),
     });
   }
 
