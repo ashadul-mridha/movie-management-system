@@ -10,7 +10,7 @@ import { UserType } from '../enums/user.enums';
 export class UserRequest {
   @IsNotEmpty()
   @IsNumber()
-  id: number;
+  userId: number;
 
   @IsNotEmpty()
   @IsEnum(UserType)

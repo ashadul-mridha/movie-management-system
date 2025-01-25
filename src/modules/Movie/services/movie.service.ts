@@ -31,11 +31,9 @@ export class MovieService {
 
   // create a new movie
   async create(userInfo: UserRequest, createMovieDto: CreateMovieDto) {
-    console.log(userInfo);
-
     return await this.movieRepository.save({
       ...createMovieDto,
-      createdBy: userInfo.id,
+      createdBy: userInfo.userId,
     });
   }
 
@@ -54,7 +52,7 @@ export class MovieService {
     }
 
     // check movie created by the same user
-    if (movie.createdBy !== userInfo.id) {
+    if (movie.createdBy !== userInfo.userId) {
       throwError(
         HttpStatus.FORBIDDEN,
         [],
@@ -84,7 +82,7 @@ export class MovieService {
   ) {
     // get all movies
     const [movies, total] = await this.movieRepository.findAndCount({
-      where: { createdBy: userInfo.id },
+      where: { createdBy: userInfo.userId },
       select: this.select,
       take: perPage,
       skip: currentPage * perPage,
@@ -107,7 +105,7 @@ export class MovieService {
   // view user own movies
   async myMovies(userInfo: UserRequest) {
     const myMovies = await this.movieRepository.find({
-      where: { createdBy: userInfo.id },
+      where: { createdBy: userInfo.userId },
       select: this.select,
     });
 
