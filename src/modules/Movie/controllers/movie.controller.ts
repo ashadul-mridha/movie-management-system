@@ -10,6 +10,7 @@ import {
   UseGuards,
   Version,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserTypes } from '../../../common/decorators/user-type.decorator';
 import { GetUser } from '../../../common/decorators/user.decorator';
 import { QueryDto } from '../../../common/dtos/query.dto';
@@ -22,6 +23,7 @@ import { CreateMovieDto } from '../dtos/create-movie.dto';
 import { UpdateMovieDto } from '../dtos/update-movie.dto';
 import { MovieService } from '../services/movie.service';
 
+@ApiBearerAuth('JWT')
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}

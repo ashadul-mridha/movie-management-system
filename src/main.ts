@@ -35,7 +35,13 @@ async function bootstrap() {
     .setTitle('Movie Management API')
     .setDescription('The Movie Management API Documentation')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        bearerFormat: 'JWT',
+      },
+      'JWT',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);

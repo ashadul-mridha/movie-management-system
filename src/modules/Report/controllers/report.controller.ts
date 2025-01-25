@@ -10,6 +10,7 @@ import {
   UseGuards,
   Version,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserTypes } from '../../../common/decorators/user-type.decorator';
 import { GetUser } from '../../../common/decorators/user.decorator';
 import { UserRequest } from '../../../common/dtos/user-req.dto';
@@ -21,7 +22,7 @@ import { CreateReportDto } from '../dtos/create-report-movie.dto';
 import { QueryReportDto } from '../dtos/query-report.dto';
 import { UpdateReportByAdminDto } from '../dtos/update-report.dto';
 import { ReportService } from '../services/report.service';
-
+@ApiBearerAuth('JWT')
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
