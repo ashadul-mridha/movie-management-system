@@ -5,5 +5,5 @@ import { ReportType } from '../../../common/enums/report.enum';
 export class QueryReportDto extends QueryDto {
   @IsOptional()
   @IsEnum(ReportType)
-  reportType?: ReportType;
+  status?: ReportType;
 }

@@ -77,7 +77,7 @@ export class ReportController {
         userInfo,
         query.perPage && +query.perPage,
         query.currentPage && query.currentPage - 1,
-        query.reportType && query.reportType,
+        query.status && query.status,
       );
     } catch (error) {
       throwError(error.status, [], error.message);

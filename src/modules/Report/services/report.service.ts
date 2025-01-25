@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserRequest } from '../../../common/dtos/user-req.dto';
 import { ReportType } from '../../../common/enums/report.enum';
 import { throwError } from '../../../common/errors/errors.function';
+import { Movie } from '../../Movie/entities/movie.entity';
 import { CreateReportDto } from '../dtos/create-report-movie.dto';
 import { UpdateReportByAdminDto } from '../dtos/update-report.dto';
 import { Report } from '../entities/report.entity';
@@ -13,6 +14,8 @@ export class ReportService {
   constructor(
     @InjectRepository(Report)
     private reportRepository: Repository<Report>,
+    @InjectRepository(Movie)
+    private movieRepository: Repository<Movie>,
   ) {}
 
   select = {
@@ -22,7 +25,7 @@ export class ReportService {
   // create a new report
   async create(userInfo: UserRequest, createReportDto: CreateReportDto) {
     // check the movie is exits or not
-    const movie = await this.reportRepository.findOne({
+    const movie = await this.movieRepository.findOne({
       where: { id: createReportDto.movieId },
     });
 
@@ -75,17 +78,17 @@ export class ReportService {
     userInfo: UserRequest,
     perPage: number = 10,
     currentPage: number = 0,
-    reportType: ReportType,
+    status: ReportType,
   ) {
     // where condition
     let whereCondition = `report.deletedAt IS NULL`;
-    if (reportType) {
-      whereCondition += ` AND report.status = '${reportType}'`;
+    if (status) {
+      whereCondition += ` AND report.status = '${status}'`;
     }
     // get all report
     const [reports, total] = await this.reportRepository
       .createQueryBuilder('report')
-      .where('report.status = :status', { status: reportType })
+      .where(whereCondition)
       .take(perPage)
       .skip(currentPage * perPage)
       .getManyAndCount();

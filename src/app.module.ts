@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AppConfigModule } from './config/app/config.module';
 import { MovieModule } from './modules/Movie/movie.module';
 import { RatingModule } from './modules/Rating/rating.module';
+import { ReportModule } from './modules/Report/report.module';
 import { UserModule } from './modules/User/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
@@ -16,6 +17,7 @@ import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider
     UserModule,
     MovieModule,
     RatingModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
